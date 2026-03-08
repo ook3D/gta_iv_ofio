@@ -70,7 +70,9 @@ def create_drawable_directory(self, filepath: Path, odd_data: dict) -> tuple[int
                 Path.joinpath(filepath.parent, odd_data["Drawables"][drawable]["Light"]).resolve()
             )
             light_objs = import_lights(drawable, lights)
-            parent_objs(light_objs, odd_obj)
+            lights_empty = create_empty_obj("Lights")
+            parent_objs(light_objs, lights_empty)
+            parent_objs([lights_empty], odd_obj)
             no_lights = len(light_objs)
 
         if light_objs is not None and skel is not None:

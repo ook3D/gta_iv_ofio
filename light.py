@@ -26,7 +26,9 @@ def import_lights_handler(filepath: Path) -> int:
 
     empty = create_empty_obj(filename)
     light_objs = import_lights(filename, light_data)
-    parent_objs(light_objs, empty)
+    lights_empty = create_empty_obj("Lights")
+    parent_objs(light_objs, lights_empty)
+    parent_objs([lights_empty], empty)
 
     return len(light_objs)
 

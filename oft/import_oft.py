@@ -86,7 +86,9 @@ def create_drawable(
     if drawable_data.get("Light") is not None:
         lights = gta_iv_light_to_dict(Path.joinpath(filepath.parent, drawable_data["Light"]).resolve())
         light_objs = import_lights(filename, lights)
-        parent_objs(light_objs, parent_object)
+        lights_empty = create_empty_obj("Lights")
+        parent_objs(light_objs, lights_empty)
+        parent_objs([lights_empty], parent_object)
         no_lights = len(light_objs)
 
     if light_objs is not None and bones is not None:
