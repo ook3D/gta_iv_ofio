@@ -12,6 +12,7 @@ from loguru import logger
 from ..blender_utils import try_unregister_class
 from ..blender_utils import create_empty_obj, parent_objs, apply_copy_transforms, find_bone_by_id
 from ..light import import_lights
+from ..material import create_materials
 from ..mesh import import_mesh
 from ..openformats2json.common import collect_meshes
 from ..openformats2json.gta_iv_light import gta_iv_light_to_dict
@@ -57,11 +58,19 @@ def create_drawable_directory(self, filepath: Path, odd_data: dict) -> tuple[int
     odd_objs = []
     for drawable in odd_data["Drawables"]:
         odd_obj = create_empty_obj(drawable)
+        drawable_data = odd_data["Drawables"][drawable]
+
+        # Create materials from shader definitions
+        materials = []
+        shader_list = drawable_data.get("Shaders", [])
+        if shader_list:
+            materials = create_materials(shader_list, filepath.parent)
+
         mesh_objs = None
-        mesh_paths: list[Path] = collect_meshes(odd_data["Drawables"][drawable])
+        mesh_paths: list[Path] = collect_meshes(drawable_data)
         for mesh_path in mesh_paths:
             meshes = gta_iv_mesh_to_dict(Path.joinpath(filepath.parent, mesh_path).resolve())
-            mesh_objs = import_mesh(self, drawable, parent_object, meshes)
+            mesh_objs = import_mesh(self, drawable, parent_object, meshes, materials=materials)
             no_meshes += len(mesh_objs)
 
         light_objs = None

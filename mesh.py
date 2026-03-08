@@ -21,7 +21,6 @@ def import_mesh_handler(self, filepath: Path) -> int:
     elif file_extension == ".json":
         with open(filepath, "r") as mesh_json:
             mesh_data = orjson.loads(mesh_json.read())
-    # logger.info(f"Importing Mesh.json: {filename} | version: {mesh_data['Version']}")
     with open(filepath.with_suffix(".json"), "wb") as f:
         f.write(orjson.dumps(mesh_data))
     empty = create_empty_obj(filename)
@@ -31,16 +30,16 @@ def import_mesh_handler(self, filepath: Path) -> int:
     return len(mesh_objs)
 
 
-def import_mesh(self, name: str, armature, data: dict, apply_skel=True) -> list:
+def import_mesh(self, name: str, armature, data: dict, apply_skel=True, materials=None) -> list:
     if data["Version"] != "11 13":
         raise ValueError(f'Expected .mesh file version: 11 13. Got {data["Version"]}')
     mesh_objs = []
     for mesh_data in data["Geometries"]:
-        mesh_objs.append(create_mesh(self, name, armature, mesh_data, data["Skinned"] and apply_skel))
+        mesh_objs.append(create_mesh(self, name, armature, mesh_data, data["Skinned"] and apply_skel, materials=materials))
     return mesh_objs
 
 
-def create_mesh(self, name, armature, geometry_data: dict, is_skinned: bool):
+def create_mesh(self, name, armature, geometry_data: dict, is_skinned: bool, materials=None):
     """Creates a mesh object in Blender."""
     mesh = bpy.data.meshes.new(f"{name}")
     obj = bpy.data.objects.new(f"{name}", mesh)
@@ -59,7 +58,13 @@ def create_mesh(self, name, armature, geometry_data: dict, is_skinned: bool):
 
     bpy.context.view_layer.objects.active = obj
 
-    mesh.mtl.index = geometry_data["Material"]
+    mtl_index = geometry_data["Material"]
+    mesh.mtl.index = mtl_index
+
+    # Assign material from the shader list
+    if materials and 0 <= mtl_index < len(materials):
+        mat = materials[mtl_index]
+        obj.data.materials.append(mat)
 
     # Add a new vertex color layer
     if not mesh.color_attributes:

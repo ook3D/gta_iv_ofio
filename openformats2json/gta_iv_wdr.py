@@ -41,19 +41,20 @@ def parse_drawable_data(reader: TextIO) -> dict:
     return drawable_data
 
 
-def parse_shader_data(reader) -> dict:
-    shadinggroup = dict()
+def parse_shader_data(reader) -> list:
+    shaders = []
     line = reader.readline()
 
     while "}" not in line:
         if line.split(maxsplit=1)[0].endswith(".sps"):
             shader_type, shader_param_value = (line.strip().split(maxsplit=1) + [None])[:2]
             shader_params = parse_shader_params(shader_type[:-4], shader_param_value)
-            shadinggroup[shader_type] = shader_params
+            shader_params["shader_type"] = shader_type[:-4]
+            shaders.append(shader_params)
 
         line = reader.readline()
     reader.readline()
-    return shadinggroup
+    return shaders
 
 
 def parse_shader_params(shader_type: str, shader_value: list | str) -> dict:

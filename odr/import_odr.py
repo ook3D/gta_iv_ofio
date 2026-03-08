@@ -17,6 +17,7 @@ from ..blender_utils import (
     apply_copy_transforms,
 )
 from ..light import import_lights
+from ..material import create_materials
 from ..mesh import import_mesh
 from ..openformats2json.common import collect_meshes
 from ..openformats2json.gta_iv_light import gta_iv_light_to_dict
@@ -59,11 +60,17 @@ def create_drawable(self, filepath: Path, odr_data: dict) -> tuple[int, int, int
         bones = skel_json["Bones"]
     parent_object["filepath"] = str(filepath)
 
+    # Create materials from shader definitions
+    materials = []
+    shader_list = odr_data.get("Shaders", [])
+    if shader_list:
+        materials = create_materials(shader_list, filepath.parent)
+
     mesh_objs = []
     mesh_paths: list[Path] = collect_meshes(odr_data)
     for index, mesh_path in enumerate(mesh_paths):
         meshes = gta_iv_mesh_to_dict(Path.joinpath(filepath.parent, mesh_path).resolve())
-        _mesh_objs = import_mesh(self, mesh_path.name, parent_object, meshes)
+        _mesh_objs = import_mesh(self, mesh_path.name, parent_object, meshes, materials=materials)
         if parent_object.type == "ARMATURE" and not meshes["Skinned"]:
             bone = find_bone_by_index(index, bones)
             for mesh_obj in _mesh_objs:

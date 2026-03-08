@@ -11,6 +11,7 @@ from loguru import logger
 from ..blender_utils import try_unregister_class
 from ..blender_utils import (create_empty_obj, parent_objs, find_bone_by_id, apply_copy_transforms)
 from ..light import import_lights
+from ..material import create_materials
 from ..mesh import import_mesh
 from ..openformats2json.common import collect_meshes, collect_children
 from ..openformats2json.gta_iv_light import gta_iv_light_to_dict
@@ -50,7 +51,7 @@ def import_oft(self, filepath: Path) -> tuple[int, int, int]:
         parent_object, num_bones = import_skel(skel_path, filename, skel_json)
         bones = skel_json["Bones"]
 
-    _, total_no_meshes, total_no_lights = create_drawable(self, filepath, oft_data, bones, parent_object=parent_object)
+    _, total_no_meshes, total_no_lights = create_drawable(self, filepath, oft_data["Drawable"], bones, parent_object=parent_object)
 
     children_dict = collect_children(oft_data["Fragments"]["Groups"])
     for child_path, group in children_dict.items():
@@ -75,11 +76,17 @@ def create_drawable(
         parent_object = create_empty_obj(filepath.name)
     no_meshes, no_lights = 0, 0
 
+    # Create materials from shader definitions
+    materials = []
+    shader_list = drawable_data.get("Shaders", [])
+    if shader_list:
+        materials = create_materials(shader_list, filepath.parent)
+
     mesh_objs = []
     mesh_paths: list[Path] = collect_meshes(drawable_data)
     for mesh_path in mesh_paths:
         meshes = gta_iv_mesh_to_dict(Path.joinpath(filepath.parent, mesh_path).resolve())
-        mesh_objs.extend(import_mesh(self, filename, parent_object, meshes))
+        mesh_objs.extend(import_mesh(self, filename, parent_object, meshes, materials=materials))
     parent_object["filepath"] = str(filepath)
 
     light_objs = None
