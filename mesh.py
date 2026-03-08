@@ -76,7 +76,7 @@ def create_mesh(self, name, armature, geometry_data: dict, is_skinned: bool, mat
         color_layer[vert_index].color = [x / 255.0 for x in colors[vert_index]]  # Assign RGBA color
 
     for i, uv_coord in enumerate(uv_coords):
-        create_uv_map(mesh, f"UVMap_{i}", uv_coord)
+        create_uv_map(mesh, f"UVMap {i}", uv_coord)
 
     if is_skinned:
         import_skinned_mesh(obj, armature, geometry_data)
