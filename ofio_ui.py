@@ -17,19 +17,8 @@ class GTAIV_PT_TOOL_PANEL(Panel):
         layout = self.layout
 
         row = layout.row(align=True)
-        row.operator("gta4_ofio.import_odr", icon="IMPORT")
-        row.operator("gta4_ofio.import_oft", icon="IMPORT")
-        row.operator("gta4_ofio.import_odd", icon="IMPORT")
-
-        row = layout.row(align=True)
-        row.operator("gta4_ofio.import_mesh", icon="IMPORT")
-        row.operator("gta4_ofio.import_light", icon="IMPORT")
-
-        layout.separator()
-
-        row = layout.row(align=True)
-        row.operator("iv.export_meshs", icon="EXPORT")
-        row.operator("iv.export_lights", icon="EXPORT")
+        row.menu("GTA4_MT_Import_Menu", text="Import", icon="IMPORT")
+        row.menu("GTA4_MT_Export_Menu", text="Export", icon="EXPORT")
 
 
 class GTA4ToolChildPanel:
