@@ -68,7 +68,7 @@ def create_mesh(self, name, armature, geometry_data: dict, is_skinned: bool, mat
 
     # Add a new vertex color layer
     if not mesh.color_attributes:
-        mesh.color_attributes.new("Color", "FLOAT_COLOR", "POINT")
+        mesh.color_attributes.new("Color 1", "BYTE_COLOR", "CORNER")
 
     color_layer = mesh.color_attributes.active.data
 
