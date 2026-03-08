@@ -9,7 +9,7 @@ from .openformats2json.gta_iv_skel import gta_iv_skel_to_dict
 
 def import_skel(filepath: Path, name=None, skel_json=None) -> list:
     if skel_json is None:
-        if filepath.suffix == ".skel" and skel_json:
+        if filepath.suffix == ".skel":
             skel_json = gta_iv_skel_to_dict(filepath.resolve())
         elif "".join(filepath.suffixes) == ".skel.json":
             skel_json = orjson.loads(filepath.resolve().read_text())

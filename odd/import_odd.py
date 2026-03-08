@@ -45,6 +45,7 @@ def import_odd(self, filepath: Path) -> tuple[int, int, int]:
 
 def create_drawable_directory(self, filepath: Path, odd_data: dict) -> tuple[int, int, int]:
     num_bones, no_meshes, no_lights = 0, 0, 0
+    bones = None
     skel = get_skel(odd_data)
     if skel is None:
         parent_object = create_empty_obj(filepath.name)

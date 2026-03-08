@@ -24,7 +24,7 @@ def collect_meshes(data: dict) -> list[Path]:
         list_meshes = iter_meshes(data["Drawable"]["LodGroup"])
     elif data.get("LodGroup") is not None:
         list_meshes = iter_meshes(data["LodGroup"])
-    if any(["High", "Med", "Low", "Vlow"]) in data:
+    if any(x in data for x in ["High", "Med", "Low", "Vlow"]):
         list_meshes = iter_meshes(data)
     return list_meshes
 

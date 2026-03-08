@@ -35,7 +35,7 @@ def export_lights(light_obj):
     data["CoronaHash"] = attr.corona_hash if attr.corona_hash.isnumeric() else ooat_unsigned(attr.corona_hash)
     data["CoronaIntensity"] = round(attr.corona_intensity, 4)
     data["LuminescenceHash"] = (
-        attr.luminescence_hash if attr.luminescence_hash.isnumeric() else ooat_unsigned(attr.corona_hash)
+        attr.luminescence_hash if attr.luminescence_hash.isnumeric() else ooat_unsigned(attr.luminescence_hash)
     )
     data["f5C"] = float(attr.f5C)
     data["LightFadeDistance"] = attr.light_fade_dist

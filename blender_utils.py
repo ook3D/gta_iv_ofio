@@ -65,11 +65,11 @@ def find_bone_by_id(bone_id: int, bones: dict) -> Optional[str]:
     return None
 
 
-def find_bone_by_index(bone_index: int, bones: dict) -> tuple[Optional[str], Optional[list[str]]]:
+def find_bone_by_index(bone_index: int, bones: dict) -> Optional[str]:
     for bone in bones:
         if bones[bone]["Index"] == bone_index:
             return bone
-    return None, []
+    return None
 
 
 def find_bone_by_name(bone_name: str, bones: dict) -> tuple[Optional[int], Optional[list[str]]]:

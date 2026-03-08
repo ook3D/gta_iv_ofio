@@ -51,6 +51,7 @@ def import_odr(self, filepath: Path) -> tuple[int, int, int]:
 def create_drawable(self, filepath: Path, odr_data: dict) -> tuple[int, int, int]:
     filename = filepath.stem
     num_bones, no_meshes, no_lights = 0, 0, 0
+    bones = None
     if odr_data.get("Skeleton") is None:
         parent_object = create_empty_obj(filepath.name)
     else:

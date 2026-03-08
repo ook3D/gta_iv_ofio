@@ -21,8 +21,6 @@ def import_mesh_handler(self, filepath: Path) -> int:
     elif file_extension == ".json":
         with open(filepath, "r") as mesh_json:
             mesh_data = orjson.loads(mesh_json.read())
-    with open(filepath.with_suffix(".json"), "wb") as f:
-        f.write(orjson.dumps(mesh_data))
     empty = create_empty_obj(filename)
     mesh_objs = import_mesh(self, filename, empty, mesh_data, apply_skel=False)
     parent_objs(mesh_objs, empty)

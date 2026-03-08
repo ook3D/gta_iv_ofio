@@ -87,8 +87,8 @@ def export_mesh(self, mesh_obj, is_skinned: bool, num_uvs: int = 6, num_uvs_skin
     )
     bone_indices, bone_weights, tangents = [], [], [(0.0, 0.0, 0.0, 0.0) for _ in range(vertex_count)]
 
-    has_vertex_color = mesh.color_attributes.active_color is not None #and mesh.color_attributes.active_color.domain == "POINT"
-    color_layer_type = mesh.color_attributes.active_color.domain
+    has_vertex_color = mesh.color_attributes.active_color is not None
+    color_layer_type = mesh.color_attributes.active_color.domain if has_vertex_color else None
     color_layer = mesh.color_attributes.active_color.data if has_vertex_color else None
 
     uv_layers = mesh.uv_layers[:num_uvs_required]

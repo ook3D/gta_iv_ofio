@@ -290,7 +290,7 @@ class LightFlags(PropertyGroup):
 
         flag_int = int(self.flag)
 
-        self.time_flag = time_flag_map.get(flag_int & 96, "OP2")
+        self.time_flag = time_flag_map.get(flag_int & 96, "night")
         self.flashiness_flags = flashiness_flag_map.get(flag_int & 798, "off")
         self.fade_flags = fade_flag_map.get(flag_int & 5120, "off")
 
@@ -302,8 +302,6 @@ class LightFlags(PropertyGroup):
         self.buzzing = bool(flag_int & 262144)
         self.volumetric_lights = bool(flag_int & 524288)
         self.no_corona_reflection = bool(flag_int & 1048576)
-
-        self.unk18 = bool(flag_int & 131072)
         self.unk22 = bool(flag_int & 2097152)
         self.unk23 = bool(flag_int & 4194304)
         self.unk24 = bool(flag_int & 8388608)
@@ -399,5 +397,7 @@ def unregister():
     del Mesh.mtl
     del Bone.attr
     del PointLight.flags
+    del PointLight.attributes
     del SpotLight.flags
+    del SpotLight.attributes
     del Material.shader
